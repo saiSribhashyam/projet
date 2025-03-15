@@ -1,4 +1,5 @@
 import {GoogleGenerativeAI} from "@google/generative-ai";
+import {Document} from "@langchain/core/documents"
 
 const genAi = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
@@ -45,3 +46,43 @@ export const aiSummariseCommit = async (diff: string) => {
     return response.response.text();
   }
 
+
+
+  export async function summariseCode(doc: Document) {
+    console.log("Generating summary for", doc.metadata.source);
+    const code = doc.pageContent.slice(0, 10000); // Limit to 10,000 characters
+    
+    const prompt = `
+      You are a senior software engineer helping a junior developer understand a codebase. 
+      Explain the purpose and functionality of the file: ${doc.metadata.source}. 
+      
+      Code:
+      ---
+      ${code}
+      ---
+      
+      Provide a clear and concise summary (maximum 400 words), covering:
+      - The file's purpose.
+      - Key functionalities.
+      - Important concepts or patterns used.
+    `;
+  
+    const response = await model.generateContent([prompt]);
+    return response.response.text();
+  }
+
+
+  export async function generateEmbedding(summary: string){
+    const model = genAi.getGenerativeModel({
+      model:"text-embedding-004",
+    })
+
+    const result = await model.embedContent(summary)
+    const embedding= result.embedding
+
+    return embedding.values
+  }
+
+
+
+  
