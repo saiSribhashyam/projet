@@ -6,6 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import useProject from "@/hooks/use-project";
 import { ExternalLink, GithubIcon } from "lucide-react";
 import Link from "next/link";
+import CommitLog from "./commit-log";
 
 
 const dashboard = () => {
@@ -52,7 +53,7 @@ const dashboard = () => {
             </div>
 
             <div className="mt-8"></div>
-            commitLog
+            <CommitLog />
             
         </div>
     );
