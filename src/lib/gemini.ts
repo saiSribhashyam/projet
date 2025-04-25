@@ -46,29 +46,45 @@ export const aiSummariseCommit = async (diff: string) => {
     return response.response.text();
   }
 
-
+  const API_KEYS = [process.env.GEMINI_API_KEY, process.env.GEMINI_API_KEY2]; // Add more keys if needed
+  let apiIndex = 0;
+  
+  function getApiKey() {
+      const key = API_KEYS[apiIndex];
+      apiIndex = (apiIndex + 1) % API_KEYS.length; // Rotate API keys
+      return key;
+  }
 
   export async function summariseCode(doc: Document) {
-    console.log("Generating summary for", doc.metadata.source);
-    const code = doc.pageContent.slice(0, 10000); // Limit to 10,000 characters
-    
-    const prompt = `
-      You are a senior software engineer helping a junior developer understand a codebase. 
-      Explain the purpose and functionality of the file: ${doc.metadata.source}. 
+    try {
+      console.log("Generating summary for", doc.metadata.source);
+      const code = doc.pageContent.slice(0, 10000); // Limit input size
+
+      const prompt = `
+      You are a senior software engineer helping a junior developer understand a codebase.
+      Explain the purpose and functionality of the file: ${doc.metadata.source}.
       
       Code:
       ---
       ${code}
       ---
       
-      Provide a clear and concise summary (maximum 400 words), covering:
+      Provide a clear and concise summary (detailed Summary), covering:
       - The file's purpose.
       - Key functionalities.
       - Important concepts or patterns used.
-    `;
-  
-    const response = await model.generateContent([prompt]);
-    return response.response.text();
+      `;
+
+      const apiKey = getApiKey(); // Get a rotated API key
+      if(!apiKey) throw new Error("No API key found");
+      genAi.apiKey = apiKey; // Set the API key on the genAi instance
+      const response = await model.generateContent([prompt]);
+
+      return response.response.text();
+  } catch (error) {
+      console.error("Error in summariseCode", error);
+      return "Error in summariseCode";
+  }
   }
 
 
@@ -82,6 +98,10 @@ export const aiSummariseCommit = async (diff: string) => {
 
     return embedding.values
   }
+
+
+
+  
 
 
 
