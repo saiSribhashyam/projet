@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import {CircularProgressbar, buildStyles} from 'react-circular-progressbar'
 import { Card } from '@/components/ui/card'
 import { uploadFile } from '@/lib/firebase'
 import { Presentation, Upload } from 'lucide-react'
@@ -21,6 +22,7 @@ const MeetingCard = () => {
         console.log(acceptedFiles)
         const file= acceptedFiles[0]
         const downloadUrl= await uploadFile(file as File, setProgress)
+        window.alert(downloadUrl)
         setIsUploading(false)
     }
   })
@@ -47,7 +49,27 @@ const MeetingCard = () => {
             </div>
             </>
         )}
+
+        {
+            isUploading && (
+                <div className=''>
+                    <CircularProgressbar value={progress} text={`${progress}%`} className='size-20' styles={
+                        buildStyles({
+                            pathColor: 'purple',
+                            textColor: 'purple',
+                            
+                        })
+                    }></CircularProgressbar>
+                    <p className='text-sm text-gray-500 text-center'>Uploading your meeting...</p>
+
+
+
+                </div>
+            )
+        }
+
     </Card>
+
   )
 }
 

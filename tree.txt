@@ -1,0 +1,6 @@
+Folder PATH listing for volume DATA
+Volume serial number is 0000007D AC8A:45FA
+D:\PERSONALPROJECTS\SAAS\GITHUBSAAS\PROJAI\-
+Invalid path - \PERSONALPROJECTS\SAAS\GITHUBSAAS\PROJAI\-
+No subfolders exist 
+

@@ -106,3 +106,15 @@ model Question{
     userId String
     user User @relation(fields: [userId], references: [id])
 }
+
+model Meeting{
+    id       String     @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    meetingUrl String
+    projectId String
+    
+
+ 
+}
